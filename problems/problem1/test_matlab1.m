@@ -1,7 +1,7 @@
 function test_matlab1()
 
 %
-% -1- Simple test d'exécution !
+% -1- Simple test d'exï¿½cution !
 %
 
 close all;
@@ -10,8 +10,8 @@ m = 1000;
 X = linspace(0,5,n+1);
 U = 1 ./ (X + 1);
 
-x = linspace(eps,5*(1-eps),m);
-uh = lagrange_super(x,X,U);
+x = linspace(eps, 5*(1-eps),m);
+uh = lagrange_super(x,X,U)
 
 figure;
 plot(x,uh,X,U,'.','Markersize',20);
@@ -47,7 +47,7 @@ for n = nSet
 end
 
 %
-% -3- Plots de l'efficacité du calcul
+% -3- Plots de l'efficacitï¿½ du calcul
 %     Pourquoi effectuer un plot du temps de calcul en log-log ?    
 %
 
