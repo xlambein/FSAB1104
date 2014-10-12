@@ -1,4 +1,14 @@
 function [uh] = lagrange_super(x,X,U)
+%LAGRANGE_SUPER - Interpolation polynomiale par polynomes de Lagrange et
+%évaluation sur un vecteur
+%
+%   Cette fonction calcule les coefficients d'un polynome de degré
+%   min(length(X),length(U)) qui interpole les points (X(i), U(i)), puis
+%   évalue ce polynome sur le vecteur x.
+%
+%   uh = LAGRANGE_SUPER(x,X,U)
+%
+%   See also LAGRANGE, LAGRANGE_NAIVE, POLYFIT, POLYVAL.
 
 n = min(length(X),length(U));
 m = length(x);
@@ -32,6 +42,11 @@ for i = 1:n
     % suivante :
     % 'linspace(eps, 5*(1-eps), m)',
     % on s'assure qu'il n'y ait pas de division par zéro.
+    % Cependant, tous les problèmes ne sont pas évités : en procédant
+    % ainsi, le programme est peu robuste et rapidement victime de pertes
+    % de précision dues aux nombres flottants. C'est pour cette raison que,
+    % pour des valeurs de n > 60, les bords de l'interpolation deviennent
+    % progressivement de plus en plus éloignés de la fonction interpolée.
     
     uh = uh + bleu./(x - X(i)); % O(m*n)
 end
