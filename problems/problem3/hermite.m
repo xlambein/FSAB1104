@@ -1,30 +1,30 @@
 function uh = hermite(n, X, U, dU, x)
-%HERMITE - Calcule et évalue une interpolation cubique par morceaux.
+%HERMITE - Calcule et evalue une interpolation cubique par morceaux.
 %
 %   Cette fonction calcule les coefficients des n polynomes d'interpolation
-%   cubique P(i) selon la règle suivante :
+%   cubique P(i) selon la regle suivante :
 %   P(i)  = U(i) en X(i) et U(i+1) en X(i+1)
 %   P'(i) = dU(i) en X(i) et dU(i+1) en X(i+1),
 %   avec X, U et dU de taille n+1.
-%   Elle évalue ensuite chaque polynome sur une section du vecteur x,
-%   correspondant à l'intervalle sur lequel le polynome est défini.
+%   Elle evalue ensuite chaque polynome sur une section du vecteur x,
+%   correspondant a l'intervalle sur lequel le polynome est defini.
 %
 %   HERMITE(n, X, U, dU, x)
 %       n  = le nombre d'intervalles
-%       X  = les n+1 abscisses d'interpolation, délimitant les n intervalles
-%       U  = les valeurs de la fonction à interpoler en chaque X
-%       dU = les valeurs de la dérivée première de la fonction à interpoler
+%       X  = les n+1 abscisses d'interpolation, delimitant les n intervalles
+%       U  = les valeurs de la fonction a interpoler en chaque X
+%       dU = les valeurs de la derivee premiere de la fonction a interpoler
 %               en chaque X
-%       x  = le vecteur d'abscisses sur lequel évaluer les polynomes
+%       x  = le vecteur d'abscisses sur lequel evaluer les polynomes
 %               d'interpolation
 
 uh = zeros(length(x));
 p = zeros(4, n);
 
 for i=1:n
-    % On résoud un système pour trouver les 4 coefficients du i-ème
+    % On resoud un systeme pour trouver les 4 coefficients du i-eme
     % polynome.
-    % Ce système correspond aux règles posées :
+    % Ce systeme correspond aux regles posees :
     % P(i)  = U(i) en X(i) et U(i+1) en X(i+1)
 	% P'(i) = dU(i) en X(i) et dU(i+1) en X(i+1).
     A = [   X(i)^3,     X(i)^2,   X(i),   1 ;
@@ -36,23 +36,23 @@ for i=1:n
     p(:, i) = A\b;
 end
 
-% Dans une première version de hermite, l'évaluation était faite sur le
-% vecteur x à l'intérieur d'une boucle sur n :
+% Dans une premiere version de hermite, l'evaluation etait faite sur le
+% vecteur x a l'interieur d'une boucle sur n :
 % for j=1:length(x)
 %     if X(i) <= x(j) && x(j) <= X(i+1)
 %         uh(j) = poly3eval(p, x(j));
 %     end
 % end
-% Une telle implémentation nous donne une complexité de O(n*m), avec
+% Une telle implementation nous donne une complexite de O(n*m), avec
 % m=length(x).
-% On peut réduire celle-ci en supposant que les abscisses de x sont
-% nécessairement ordonnées, ou en les ordonnant au départ. C'est ce que
-% j'ai décidé de faire ici :
+% On peut reduire celle-ci en supposant que les abscisses de x sont
+% necessairement ordonnees, ou en les ordonnant au depart. C'est ce que
+% j'ai decide de faire ici :
 
 x = sort(x);
 
-% Ensuite, il suffit d'évaluer en chaque x(i) le j-ème polynome, en
-% incrémentant j dès que x(i) dépasse X(j+1) :
+% Ensuite, il suffit d'evaluer en chaque x(i) le j-eme polynome, en
+% incrementant j des que x(i) depasse X(j+1) :
 j = 1;
 for i=1:length(x)
     if x(i) > X(j+1)
@@ -61,9 +61,9 @@ for i=1:length(x)
     uh(i) = poly3eval(p(:, j), x(i));
 end
 
-% On obtient une complexité de n pour le calcul des coefficients, m*log(m)
-% pour sort(x) et m pour l'évaluation des polynomes sur le vecteur x.
-% La complexité de hermite est donc O(n + m*log(m)).
+% On obtient une complexite de n pour le calcul des coefficients, m*log(m)
+% pour sort(x) et m pour l'evaluation des polynomes sur le vecteur x.
+% La complexite de hermite est donc O(n + m*log(m)).
 
 end
 
