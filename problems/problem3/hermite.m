@@ -10,13 +10,28 @@ function uh = hermite(n, X, U, dU, x)
 %   correspondant a l'intervalle sur lequel le polynome est defini.
 %
 %   HERMITE(n, X, U, dU, x)
-%       n  = le nombre d'intervalles
+%       n  = le nombre d'intervalles (>= 1)
 %       X  = les n+1 abscisses d'interpolation, delimitant les n intervalles
 %       U  = les valeurs de la fonction a interpoler en chaque X
 %       dU = les valeurs de la derivee premiere de la fonction a interpoler
 %               en chaque X
 %       x  = le vecteur d'abscisses sur lequel evaluer les polynomes
 %               d'interpolation
+
+% On applique la programmation defensive pour verifier que les arguments
+% fournis sont corrects, au cas ou un vicieux tuteur de methode numerique
+% essaierait d'utiliser HERMITE n'importe comment...
+assert(n >= 1,...
+       'Le nombre d''intervalles ne peut pas être inferieur a 1');
+assert(n+1 == length(X),...
+       'Le nombre n d''intervalles plus un (%d+1) ne correspond pas a la taille du vecteur X (%d).',...
+       n, length(X));
+assert(length(X) == length(U),...
+       'Les vecteurs X et U n''ont pas la même taille (respectivement %d et %d).',...
+       length(X), length(U));
+assert(length(X) == length(dU),...
+       'Les vecteurs X et dU n''ont pas la même taille (respectivement %d et %d).',...
+       length(X), length(dU));
 
 uh = zeros(length(x));
 p = zeros(4, n);
@@ -50,6 +65,14 @@ end
 % j'ai decide de faire ici :
 
 x = sort(x);
+
+% Au passage, le fait que x soit ordonne nous permet de verifier que toutes
+% les abscisses d'evaluation sont comprises entre X(1) et X(end),
+% c'est-a-dire dans un des n intervalles consideres.
+assert(x(1) >= X(1),...
+       'Une ou plusieurs abscisses d''evaluation x(i) sont inferieures a X(1) et donc hors du domaine.');
+assert(x(end) <= X(end),...
+       'Une ou plusieurs abscisses d''evaluation x(i) sont superieures a X(end) et donc hors du domaine.');
 
 % Ensuite, il suffit d'evaluer en chaque x(i) le j-eme polynome, en
 % incrementant j des que x(i) depasse X(j+1) :
