@@ -35,8 +35,6 @@ Ii0 = gl(L, n, z);
 % Then we compute the next line of the Richardson extrapolation. The last
 % element of this vector is our current best value for Ih.
 Ii = nextRichardson(prevI, Ii0);
-Ii
-n
 
 % If the difference between the best result and the previous best result is
 % still bigger than error, then it means we need to do (at least) another
@@ -55,14 +53,11 @@ function I = nextRichardson(prevI, I0)
 % first value of the next vector.
 
 I = zeros(length(prevI)+1, length(I0));
-I(1, :) = I0;
+I(1) = I0;
 
 for j=2:size(I)
-    % The error of Gauss-Legendre is in O((h^2)^4), and h^2 decreases by 4
-    % at each iteration, so we begin with 4^4. The next order of error to
-    % remove will thus be 4^5, then 4^6, ..., 4^(4+j).
     a = 2^(4+j);
-    I(j, :) = (a*I(j-1, :) - prevI(j-1))/(a - 1);
+    I(j) = (a*I(j-1) - prevI(j-1))/(a - 1);
 end
 
 end
